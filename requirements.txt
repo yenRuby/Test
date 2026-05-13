@@ -9,3 +9,7 @@ requests==2.31.0
 beautifulsoup4==4.12.2
 wikipedia==1.4.0
 hanziconv
+duckduckgo_search
+google-generativeai
+requests
+wikipedia
