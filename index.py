@@ -4,9 +4,9 @@ import os
 import glob
 import time
 from dotenv import load_dotenv
-from tongtong.brain import TongTongBrain
-from tongtong.voice import generate_bot_audio
-from tongtong.text_utils import bot_speak_re, bot_clean_text
+from .tongtong.brain import TongTongBrain
+from .tongtong.voice import generate_bot_audio
+from .tongtong.text_utils import bot_speak_re, bot_clean_text
 
 # Load environment variables from .env file
 load_dotenv()
