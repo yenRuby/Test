@@ -97,10 +97,6 @@ def chat():
     else:
         web_audio_url = None
 
-    result = {
-        'reply': display_text,
-        'audio_url': web_audio_url  # ⚠️ 確保這裡傳給前端的是新網址
-    }
     # If next audio URL exists, verify it exists; otherwise clear it
     if next_audio_url:
         fs_path = next_audio_url.lstrip('/')
@@ -109,7 +105,7 @@ def chat():
 
     result = {
         'reply': display_text,
-        'audio_url': audio_url
+        'audio_url': web_audio_url
     }
     if next_audio_url:
         result['next_audio_url'] = next_audio_url
