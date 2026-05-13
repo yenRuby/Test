@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import os
 import glob
@@ -29,7 +29,18 @@ def index():
     display_text = bot_clean_text(welcome_text)
     cleaned_speech = bot_speak_re(welcome_text)
     audio_url = generate_bot_audio(cleaned_speech, voice_type)
-    
+    if audio_url:
+        # 只擷取純檔名（例如 voice_123.mp3）
+        filename = os.path.basename(audio_url)
+        # 包裝成前端瀏覽器看得懂的網址網徑
+        web_audio_url = f"/api/stream-audio?file={filename}"
+    else:
+        web_audio_url = None
+
+    result = {
+        'reply': display_text,
+        'audio_url': web_audio_url  # ⚠️ 確保這裡傳給前端的是新網址
+    }
     return render_template('index.html', 
                            initial_message=display_text, 
                            initial_audio=audio_url,
@@ -78,7 +89,18 @@ def chat():
     # Generate TTS from cleaned text
     cleaned_text = bot_speak_re(payload_text)
     audio_url = generate_bot_audio(cleaned_text, voice_type)
-    
+    if audio_url:
+        # 只擷取純檔名（例如 voice_123.mp3）
+        filename = os.path.basename(audio_url)
+        # 包裝成前端瀏覽器看得懂的網址網徑
+        web_audio_url = f"/api/stream-audio?file={filename}"
+    else:
+        web_audio_url = None
+
+    result = {
+        'reply': display_text,
+        'audio_url': web_audio_url  # ⚠️ 確保這裡傳給前端的是新網址
+    }
     # If next audio URL exists, verify it exists; otherwise clear it
     if next_audio_url:
         fs_path = next_audio_url.lstrip('/')
@@ -110,6 +132,24 @@ def cleanup():
                 pass
     return jsonify({'status': 'ok', 'deleted': count})
 
+@app.route('/api/stream-audio')
+def stream_audio():
+    # 接收前端帶過來的 file 參數
+    filename = request.args.get('file', '')
+    
+    if not filename:
+        return "Missing file parameter", 400
+        
+    # 安全串接路徑，防止目錄穿越攻擊
+    safe_filename = os.path.basename(filename)
+    filepath = os.path.join("/tmp", safe_filename)
+    
+    # 如果檔案存在，就以 MP3 串流格式傳回給瀏覽器播放
+    if os.path.exists(filepath):
+        return send_file(filepath, mimetype="audio/mpeg")
+    else:
+        return "Audio file not found", 404
+    
 if __name__ == '__main__':
     # Cleanup audio dir on start
     files = glob.glob('static/audio/voice_*.mp3')

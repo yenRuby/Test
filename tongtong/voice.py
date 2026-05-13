@@ -33,7 +33,7 @@ def generate_bot_audio(text, voice_type="female"):
     # Generate a unique filename to avoid collisions and caching issues
     file_id = str(uuid.uuid4())
     filename = f"voice_{file_id}.mp3"
-    filepath = os.path.join(AUDIO_DIR, filename)
+    filepath = os.path.join("/tmp", filename)
     
     voice_name = VOICES.get(voice_type, VOICES["female"])
 
@@ -52,7 +52,7 @@ def generate_bot_audio(text, voice_type="female"):
         except Exception as ge:
             print(f"gTTS error: {ge}")
 
-    if success and os.path.isfile(filepath):
+    if success:
         # Return the relative path for web access
-        return f"/static/audio/{filename}"
+        return filepath
     return None
