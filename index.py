@@ -3,19 +3,19 @@ from flask_cors import CORS
 import os
 import glob
 import time
+
+# Load environment variables from .env file
 from dotenv import load_dotenv
+load_dotenv()
+
 from tongtong.brain import TongTongBrain
 from tongtong.voice import generate_bot_audio
 from tongtong.text_utils import bot_speak_re, bot_clean_text
 
-# Load environment variables from .env file
-load_dotenv()
+brain = TongTongBrain()
 
 app = Flask(__name__)
 CORS(app)
-
-# Initialize Brain
-brain = TongTongBrain()
 
 @app.route('/')
 def index():
