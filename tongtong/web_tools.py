@@ -14,8 +14,7 @@ def bot_get_time():
     """
     Returns the current date and time.
     """
-    tw_tz = timezone(timedelta(hours=8))
-    now = datetime.datetime.now(tw_tz)
+    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
     return now.strftime("現在是 %Y 年 %m 月 %d 日，%H 點 %M 分。")
 
 def bot_get_weather(city="台北"):
