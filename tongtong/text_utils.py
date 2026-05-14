@@ -94,7 +94,7 @@ def bot_speak_re(text):
         elif (0x41 <= code <= 0x5a) or (0x61 <= code <= 0x7a) or (0x30 <= code <= 0x39):
             result.append(char)
         # Common punctuation and spaces
-        elif char in '，。！？、：；（）()「」『』\s\t\n\r -–—～':
+        elif char in '，。！？、：；（）()「」『』\\s\t\n\r -–—～':
             result.append(char)
         # Chinese punctuation marks that might not be in the above list
         elif code in [65292, 65294, 65281, 65311, 12289, 12290, 12291]:  # Chinese punctuation

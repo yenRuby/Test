@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import datetime
 import os
 import random
+import google.genai as genai
 from dotenv import load_dotenv
 from .text_utils import to_traditional, bot_clean_text
 
@@ -119,7 +120,6 @@ def bot_enhance_with_gemini(user_input, search_result=""):
     Uses Gemini API to enhance the response.
     """
     try:
-        import google.genai as genai
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key or api_key == "GEMINI_API_KEY":
             return search_result
