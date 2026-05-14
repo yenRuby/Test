@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import datetime
+from datetime import datetime, timedelta, timezone
 import os
 import random
 import google.genai as genai
@@ -14,7 +14,8 @@ def bot_get_time():
     """
     Returns the current date and time.
     """
-    now = datetime.datetime.now()
+    tw_tz = timezone(timedelta(hours=8))
+    now = datetime.datetime.now(tw_tz)
     return now.strftime("現在是 %Y 年 %m 月 %d 日，%H 點 %M 分。")
 
 def bot_get_weather(city="台北"):
@@ -42,7 +43,7 @@ def bot_get_weather(city="台北"):
     except:
         return f"查詢天氣時出錯了呢，你可以試著直接問我其他問題喔！"
 
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 def bot_get_ddg_search(keyword):
     """
@@ -50,8 +51,8 @@ def bot_get_ddg_search(keyword):
     """
     try:
         search_query = f"{keyword} 介紹"
-        with DDGS() as ddgs:
-            results = ddgs.text(search_query, region='tw-tzh', safesearch='moderate', timelimit='y', max_results=5)
+        with DDGS(timeout=3) as ddgs:
+            results = ddgs.text(search_query, region='tw-tzh', safesearch='on', max_results=5)
             if results:
                 valid_bodies = [r['body'] for r in results if 'body' in r and len(r['body']) > 30]
                 if valid_bodies:
